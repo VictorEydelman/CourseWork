@@ -20,7 +20,7 @@ public class Intermediate_result_Service {
     }
 
     public List<Intermediate_result> getByProject_stages(long projectstages){
-        return projectIntermediateResultRepository.getAllByProjectstages_Id(projectstages);
+        return projectIntermediateResultRepository.getAllByProjectstages_IdOrderById(projectstages);
     }
     public Intermediate_result getById(long id){
         return projectIntermediateResultRepository.getById(id);

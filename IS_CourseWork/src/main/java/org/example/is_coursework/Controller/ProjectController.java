@@ -188,6 +188,20 @@ public class ProjectController {
         }
 
     }
+    @PostMapping(value = "/updatenamedescription",produces = MediaType.APPLICATION_JSON_VALUE)
+    private ResponseEntity<String> updatenamedescription(@Valid @RequestBody NameDescriptionDTO nameDescriptionDTO, HttpServletRequest request) {
+        try {
+            User user1 = userService.getByLogin(jwtService.extractUsername(jwtService.resolveToken(request)));
+            Project project = projectService.getProject(nameDescriptionDTO.getId());
+            project.setName(nameDescriptionDTO.getName());
+            project.setDescription(nameDescriptionDTO.getDescription());
+            projectService.save(project);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Ошибка добавления",HttpStatus.BAD_REQUEST);
+        }
+
+    }
     @GetMapping(value = "/getbyuser", produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<List<Project>> getbyuser(HttpServletRequest request) {
         try {
@@ -266,8 +280,7 @@ public class ProjectController {
                         .date(project_stages_for_approval.getDate()).description("Подана заявка на утверждение этапа проекта: "+project_stages_for_approval.getLink()).build();
                 notification_reqs.add(notificationReq);
             }
-            notification_reqs.sort((p1, p2) -> p1.getDate().compareTo(p2.getDate()));
-            //User user = userService.getByLogin(jwtService.extractUsername(jwtService.resolveToken(request)));
+            notification_reqs.sort((p1, p2) -> p2.getDate().compareTo(p1.getDate()));
             return new ResponseEntity<>(notification_reqs,HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

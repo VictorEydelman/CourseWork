@@ -156,12 +156,15 @@ const Main = () => {
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
-            }else {
-                //const result = await response.json(); // Получаем ответ в формате JSON
-                //console.log('Success:', result);
-            }// Обрабатываем успешный ответ
+            }
+            setName("")
+            setdescription("")
+            setSelectedscientific_supervisor("")
+            setSelectedStudents([])
+            setpurposes([])
+            setobjectives([])
         } catch (error) {
-            console.error('Error:', error); // Обрабатываем ошибки
+            console.error('Error:', error);
         }
     };
 

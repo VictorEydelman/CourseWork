@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface Project_intermediate_result_Repository extends JpaRepository<Intermediate_result,Long> {
-    List<Intermediate_result> getAllByProjectstages_Id(long projectstages);
+    List<Intermediate_result> getAllByProjectstages_IdOrderById(long projectstages);
 }

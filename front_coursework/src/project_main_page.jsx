@@ -32,6 +32,10 @@ const Projects = ({selectedProject, projectId}) => {
     const [selectedSci, setSelectedSci] = useState('');
     const [selectedMentor, setSelectedMentor] = useState('');
     const [selectedPer, setSelectedPer] = useState('');
+    const [nameupdate,setnameupdate] = useState(selectedProject.name);
+    const [nameupdatet,setnameupdatet] = useState(false);
+    const [desupdate,setdesupdate] = useState(selectedProject.name);
+    const [desupdatet,setdesupdatet] = useState(false);
 
 
     useEffect(() => {
@@ -168,6 +172,28 @@ const Projects = ({selectedProject, projectId}) => {
                 body: JSON.stringify({
                     id: projectId,
                     scientific_supervisor:selectedSci
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    const updatenamedescription = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:9876/api/project/updatenamedescription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem("jwt")
+                },
+                body: JSON.stringify({
+                    id: projectId,
+                    name:nameupdate,
+                    description:desupdate
                 }),
             });
             if (!response.ok) {
@@ -328,13 +354,26 @@ const Projects = ({selectedProject, projectId}) => {
         setStagesci("")
         setreduction(false)
     }, [projects.id]);
-    console.log(projects,localStorage.getItem("id"))
     return (
         <div>
             {projects && (
                 <div>
                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                         <h2 style={{overflow: 'hidden', margin: 0,marginLeft:'40%'}}>Название: {projects.name}</h2>
+                        {reduction?<>
+                            <button onClick={() => {
+                                (nameupdatet) ? setnameupdatet(false) : setnameupdatet(true)
+                            }}><FontAwesomeIcon icon={faSync} spin />
+                            </button>
+                            {nameupdatet ? <>
+                                <input style={{width:"30%"}}
+                                    type="text"
+                                    value={nameupdate}
+                                    onChange={(e) => setnameupdate(e.target.value)}
+                                />
+                                <button onClick={updatenamedescription}>Обновить</button>
+                            </> : <></>}
+                        </>:<></>}
                         {(projects.approval && (projects.scientific_supervisor_user_id.id.toString() === localStorage.getItem("id"))) ?
                             <button
                                 style={{overflow: 'hidden'}}
@@ -484,12 +523,26 @@ const Projects = ({selectedProject, projectId}) => {
                         <br/>
                     </div>
                     <div className="op">
-                    <p>Описание {projects.description}</p>
-
+                    Описание<br/>
+                        {projects.description}
+                        {reduction?<>
+                        <button onClick={() => {
+                            (desupdatet) ? setdesupdatet(false) : setdesupdatet(true)
+                        }}><FontAwesomeIcon icon={faSync} spin />
+                        </button>
+                        {desupdatet ? <>
+                            <input
+                                type="text"
+                                value={desupdate}
+                                onChange={(e) => setdesupdate(e.target.value)}
+                            />
+                            <button onClick={updatenamedescription}>Обновить</button></>:null}
+                        </> : <></>}
+                        <br/>
                     Задачи
                     <ul>
                         {objectiveItems}
-                    </ul>
+                    </ul><br/>
                     Цели
                     <ul>
                         {purposeItems}

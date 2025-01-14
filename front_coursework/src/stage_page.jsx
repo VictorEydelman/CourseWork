@@ -17,11 +17,30 @@ const Projects = ({stages,objectives}) => {
     const [stagessend, setStagessend] = useState([])
     const [Objectives, setObjectives] = useState([])
     const [approval, setapproval] = useState([])
+    const [approval_sci, setapproval_sci] = useState(stage.approval_by_scientific_supervisor)
     const [approval_by_mentor, setapproval_by_mentor] = useState(stage.approval_by_mentor)
     const [r,setr]=useState([]);
     useEffect(() => {
         const fetchStage8 = async () => {
             try {
+                try {
+                    const response = await fetch(`http://localhost:9876/api/stage/getstage/${stages.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem("jwt")
+                        }
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    } else {
+                        const result = await response.json();
+                        setstages(result);
+                        console.log(result)
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
                 const response = await fetch(`http://localhost:9876/api/stage/getbyprojectStages/${stage.id}`, {
                     method: 'GET',
                     headers: {
@@ -93,24 +112,7 @@ const Projects = ({stages,objectives}) => {
             } catch (error) {
                 console.error('Error:', error);
             }
-            try {
-                const response = await fetch(`http://localhost:9876/api/stage/getstage/${stage.id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem("jwt")
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                } else {
-                    const result = await response.json();
-                    setstages(result);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            setstages(stages)
+
         };
 
         fetchStage8();
@@ -124,6 +126,8 @@ const Projects = ({stages,objectives}) => {
         files.forEach((file) => {
             formData.append('files', file);
         });
+        setFiles([])
+        setStagesci("")
         formData.append('description',stagesci)
         formData.append('project_stages',stage.id)
         e.preventDefault();
@@ -222,7 +226,6 @@ const Projects = ({stages,objectives}) => {
                 throw new Error('Network response was not ok');
             } else {
                 const result = await response.text();
-                console.log(result)
                 const blob = new Blob([result], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
@@ -237,7 +240,7 @@ const Projects = ({stages,objectives}) => {
             console.error('Error:', error);
         }
     }
-    const CommentSubmit = async (e,id,des) => {
+    const CommentSubmit = async (e,id,des,i) => {
         e.preventDefault();
         try {
             const response = await fetch('http://localhost:9876/api/comments/add', {
@@ -257,6 +260,7 @@ const Projects = ({stages,objectives}) => {
             } else {
             }// Обрабатываем успешный ответ
             setStagesci('');
+            updateOrAddItem({id: i, name: ""})
         } catch (error) {
             console.error('Error:', error); // Обрабатываем ошибки
         }
@@ -272,7 +276,6 @@ const Projects = ({stages,objectives}) => {
     for (let i = 0; i < intermediate.length; i++) {
         const Intermediate = intermediate[i];
         const ComItems=[]
-        //console.log(comment,9)
         if(comment.length===intermediate.length) {
             for (let j = 0; j < comment[i].length; j++) {
             const com = comment[i][j];
@@ -324,7 +327,7 @@ const Projects = ({stages,objectives}) => {
                             />
 
                             <button type="submit"
-                                    onClick={(e) => CommentSubmit(e, Intermediate.id, currentCommentItem.name)}>Отправить
+                                    onClick={(e) => CommentSubmit(e, Intermediate.id, currentCommentItem.name,i)}>Отправить
                             </button>
                         </> : <></>}
 
@@ -350,6 +353,22 @@ const Projects = ({stages,objectives}) => {
             } else {
                 return [...prevComments, { id: interm, items: [{ id: newItem.id, name: newItem.name }] }];
             }
+        });
+    };
+    const clearItemById = (itemId, interm) => {
+        setcomments((prevComments) => {
+            const existingIndex = prevComments.findIndex(item => item.id === interm);
+            if (existingIndex !== -1) {
+                const updatedItems = [...prevComments];
+                const existingItems = updatedItems[existingIndex].items;
+                const itemIndex = existingItems.findIndex(item => item.id === itemId);
+                if (itemIndex !== -1) {
+                    existingItems[itemIndex] = { ...existingItems[itemIndex], name: '' };
+                }
+                updatedItems[existingIndex].items = existingItems;
+                return updatedItems;
+            }
+            return prevComments;
         });
     };
     const [file, setFile] = useState(null);
@@ -379,12 +398,14 @@ const Projects = ({stages,objectives}) => {
                 checked={stage.approval_by_scientific_supervisor}
                 onChange={(e) => approval_by_sciSubmit(e, stage.id)}
                 disabled={stage.project.scientific_supervisor_user_id.id.toString() !== localStorage.getItem("id")}
-            />
+            /><br/><br/>
+            Цели
             <ul>
                 {Objectives.map((t, index) => (
                     <li>{t.description}</li>
                 ))}
             </ul>
+            Выложить результаты
             <div>
                 {(stage.project.mentor_user_id.id.toString() === localStorage.getItem("id") ||
                     stage.project.scientific_supervisor_user_id.id.toString() === localStorage.getItem("id") ||
@@ -400,7 +421,7 @@ const Projects = ({stages,objectives}) => {
                         onChange={(e) => setStagesci(e.target.value)}
                         placeholder="Введите сообщение"
                     />
-                    <button type="submit" onClick={IntermediateSubmit}>Добавить</button>
+                    <button disabled={files.length===0 || stagesci===""} type="submit" onClick={IntermediateSubmit}>Добавить</button>
                 </> : <></>}
                 <ul>{IntermediateItems}</ul>
             </div>

@@ -50,7 +50,7 @@ const Projects = ({selectedProject, projectId}) => {
 
         // Очищаем интервал при размонтировании компонента
         return () => clearInterval(intervalId);
-    }, [projectId]);
+    }, [SelectedStage]);
     useEffect(()=>{
         setpage(true)
     },[projectId])
