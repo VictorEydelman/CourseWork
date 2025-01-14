@@ -1,0 +1,46 @@
+
+
+.App label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.App input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box; /* Важно для правильного выравнивания */
+}
+
+.App button {
+    padding: 10px 15px;
+    background-color: #4CAF50; /* Зеленый цвет */
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 10px; /* Отступ сверху */
+    font-weight: bold; /* Жирное начертание */
+}
+
+.App button:hover {
+    background-color: #45a049; /* Тёмно-зелёный при наведении */
+}
+
+/* Добавление стилей для ссылки */
+.App a {
+    text-decoration: none;
+    color: inherit; /* Наследует цвет от родителя */
+}
+
+.App button + a {
+    margin-top: 10px;
+}
+
+/* Style for error messages */
+.error-message {
+    color: red;
+    margin-top: 5px;
+}

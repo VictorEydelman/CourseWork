@@ -1,0 +1,132 @@
+.dropdown-container {
+    position: relative;
+    width: 100px; /* or a specific width */
+    display: inline-block; /* Important for positioning the dropdown */
+}
+
+.dropdown-container button {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #f0f0f0; /* Light gray background */
+}
+
+.dropdown-container button:hover {
+    background-color: #e0e0e0;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a shadow */
+    overflow-y: auto;  /* Enable scrolling for long lists */
+    max-height: 250px; /* Limit the height to prevent overflow */
+    overflow-x: hidden;
+    z-index: 1;
+}
+
+
+.dropdown-content > div {
+    padding: 5px 10px;
+    border-bottom: 1px solid #eee; /* Separators between items */
+    cursor: pointer;
+}
+
+
+.dropdown-content > div:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown-content > div button{
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.dropdown-content > div button:hover{
+    background-color:#d0d0d0;
+}
+
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0; /* Add some spacing around the list */
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding-top:5px;
+}
+
+
+ul li {
+    padding: 8px;
+    cursor: pointer;
+    background-color:#f9f9f9;
+
+}
+
+ul li:hover {
+    background-color:#f0f0f0;
+}
+
+/* Style for the profile section (optional but recommended) */
+#profile-container {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+.container {
+    display : flex;
+    flex-direction : row;
+    width: 100%;
+}
+.men{
+    margin-left: 2%;
+    width: 20%;
+    float: left;
+    overflow: hidden;
+}
+.projectblock{
+    margin-right: 4%;
+    width: 70%;
+    float: right;
+    overflow: hidden;
+}
+.stage-item {
+    flex: 1; /* Каждый элемент занимает равное пространство */
+    padding: 15px; /* Внутренние отступы для удобства */
+    text-align: center; /* Центрируем текст */
+    background-color: #4CAF50; /* Цвет фона для выделения */
+    color: white; /* Цвет текста */
+    cursor: pointer; /* Указатель при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета фона */ /* Плавный переход цвета фона */
+}
+.pe{
+    width: 20%;
+    float: left;
+    overflow: hidden;
+}
+.op{
+    width: 70%;
+    overflow: hidden;
+    float: right;
+}
+button:disabled {
+    background-color: #c0c0c0; /* Цвет фона для отключенной кнопки */
+    color: #7d7d7d; /* Цвет текста для отключенной кнопки */
+    cursor: not-allowed; /* Курсор в виде запрещающего знака */
+    opacity: 0.6; /* Прозрачность для отключенной кнопки */
+}
